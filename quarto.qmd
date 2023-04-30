@@ -1,0 +1,53 @@
+---
+title: "MT5000 Final Assignment"
+author: "Cian Cahalane"
+date: 29/04/23
+format: html
+editor: visual
+echo: false
+warning: false
+message: false
+---
+
+```{r}
+library(tidyverse)
+
+
+unicef_metadata <- read.csv("unicef_metadata.csv")
+countries <- c("China", "India", "Russia", "Brazil")
+unicef_GDP_2016 <- unicef_metadata %>%
+  filter(year == 2016, country %in% countries) %>% select(country, gdp = "GDP.per.capita..constant.2015.US..")
+
+ggplot(data = unicef_GDP_2016) +
+  aes(x = country, y = gdp) +
+  geom_bar(stat = "identity", fill = "lightgreen") +
+  labs(title = "comparative GDP", x = "Country", y = "GDP") +
+  theme_classic()
+```
+
+#  This bar chart compares the GDP between Brazil, China, India and Russia, it is apparent from the chart that India has only acquired a fraction of the GDP in comparison to the other countries.
+
+```{r}
+library(tidyverse)
+library(maps)
+
+unicef_indicator_1 <- read.csv("unicef_indicator_1.csv")
+world_map <- map_data("world")
+
+unicef_2016 <- unicef_indicator_1 %>%
+  filter(time_period == 2016, obs_value > 0) %>% 
+  select(country, obs_value)
+
+map_obs_2016 <- full_join(fortify(world_map), unicef_2016, by = c("region" = "country"))
+
+ggplot(data = map_obs_2016) +
+  aes(x = long, y = lat, group = group, fill = obs_value, color = obs_value) +
+  geom_polygon() +
+  scale_fill_gradient(low = "lightblue", high = "blue") +
+  labs(title = "Worldwide OBS Value", x = "", y = "") +
+  theme_classic()
+```
+
+# Please refer to the top observation measure only.
+
+This world map chart displays the percentage of population using unsanitary water. The top obs_value indicator displays countries who have a higher percentage is dark blue while countries light blue have a lower percentage.
